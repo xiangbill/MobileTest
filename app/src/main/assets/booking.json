@@ -1,0 +1,128 @@
+{
+  "shipReference": "ABCDEF",
+  "shipToken": "AAAABBBCCCCDDD",
+  "canIssueTicketChecking": false,
+  "expiryTime": "1722409261",
+  "duration": 2430,
+  "segments": [
+    {
+      "id": 1,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "BBB",
+          "displayName": "BBB DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "BBB City",
+        "origin": {
+          "code": "AAA",
+          "displayName": "AAA DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "AAA City"
+      }
+    },
+    {
+      "id": 2,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "CCC",
+          "displayName": "CCC DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "CCC City",
+        "origin": {
+          "code": "BBB",
+          "displayName": "BBB DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "BBB City"
+      }
+    },
+    {
+      "id": 3,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "DDD",
+          "displayName": "DDD DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "DDD City",
+        "origin": {
+          "code": "EEE",
+          "displayName": "EEE DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "EEE City"
+      }
+    },
+    {
+      "id": 4,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "FFF",
+          "displayName": "FFF DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "FFF City",
+        "origin": {
+          "code": "GGG",
+          "displayName": "GGG DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "GGG City"
+      }
+    },
+    {
+      "id": 5,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "HHH",
+          "displayName": "HHH DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "HHH City",
+        "origin": {
+          "code": "III",
+          "displayName": "III DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "III City"
+      }
+    },
+    {
+      "id": 6,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "JJJ",
+          "displayName": "JJJ DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "JJJ City",
+        "origin": {
+          "code": "KKK",
+          "displayName": "KKK DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "KKK City"
+      }
+    },
+    {
+      "id": 7,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "LLL",
+          "displayName": "LLL DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "LLL City",
+        "origin": {
+          "code": "MMM",
+          "displayName": "MMM DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "MMM City"
+      }
+    }
+  ]
+}
