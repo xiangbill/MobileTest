@@ -1,76 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/tv_booking_list_item_destCity"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="dest of SHENZHEN" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="12dp">
 
-        <TextView
-            android:layout_marginTop="6dp"
-            android:id="@+id/tv_booking_list_item_destName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="this is dest name" />
+            <TextView
+                android:id="@+id/tv_booking_list_item_destCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="dest of SHENZHEN" />
 
-        <Button
-            android:layout_marginTop="6dp"
-            android:id="@+id/btn_booking_list_item_destUrl"
+            <TextView
+                android:id="@+id/tv_booking_list_item_destName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="this is dest name" />
+
+            <Button
+                android:id="@+id/btn_booking_list_item_destUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="click skip dest url" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="click skip dest url" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tv_booking_list_item_orgCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="org of SHENZHEN" />
+
+            <TextView
+                android:id="@+id/tv_booking_list_item_orgName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="this is org name" />
+
+            <Button
+                android:id="@+id/btn_booking_list_item_orgUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="click skip org url" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="12dp">
-
-        <TextView
-            android:id="@+id/tv_booking_list_item_orgCity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="org of SHENZHEN" />
-
-        <TextView
-            android:layout_marginTop="6dp"
-            android:id="@+id/tv_booking_list_item_orgName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="this is org name" />
-
-        <Button
-            android:layout_marginTop="6dp"
-            android:id="@+id/btn_booking_list_item_orgUrl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="click skip org url" />
-    </LinearLayout>
-
-</LinearLayout>
+</layout>

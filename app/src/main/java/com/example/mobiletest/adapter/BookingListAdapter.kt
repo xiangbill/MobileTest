@@ -1,52 +1,66 @@
 package com.example.mobiletest.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobiletest.R
+import com.example.mobiletest.databinding.ActivityBookingItemBinding
 import com.example.mobiletest.model.BookingItem
 
 
-class BookingListAdapter(private val bookingList: MutableList<BookingItem>) :
+class BookingListAdapter(private val bookingList: ArrayList<BookingItem>) :
     RecyclerView.Adapter<BookingListAdapter.BookingViewHolder>() {
 
     var clickCallBack: BookingListClickCallBack? = null
 
     override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
         val bookingItem = bookingList[position]
-        holder.tvDestCity.text = bookingItem.originAndDestinationPair.destinationCity
-        holder.tvOrgCity.text = bookingItem.originAndDestinationPair.originCity
-        holder.tvDestName.text = bookingItem.originAndDestinationPair.destination.displayName
-        holder.tvOrgName.text = bookingItem.originAndDestinationPair.origin.displayName
-
-        holder.btnDestUrl.setOnClickListener {
-            clickCallBack?.destClick(bookingItem.originAndDestinationPair.destination.url)
-        }
-        holder.btnOrgUrl.setOnClickListener {
-            clickCallBack?.orgClick(bookingItem.originAndDestinationPair.origin.url)
-        }
+        holder.initItem(bookingItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_booking_item, parent, false)
-        return BookingViewHolder(view)
+        val itemBinding =
+            ActivityBookingItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return BookingViewHolder(itemBinding)
     }
 
     override fun getItemCount(): Int {
         return bookingList.size
     }
 
-    inner class BookingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvDestCity: TextView = itemView.findViewById(R.id.tv_booking_list_item_destCity)
-        val btnDestUrl: Button = itemView.findViewById(R.id.btn_booking_list_item_destUrl)
-        val tvDestName: TextView = itemView.findViewById(R.id.tv_booking_list_item_destName)
+    inner class BookingViewHolder(private val bookingItemBinding: ActivityBookingItemBinding) :
+        RecyclerView.ViewHolder(bookingItemBinding.root) {
+        fun initItem(item: BookingItem) {
+            item.apply {
+                bookingItemBinding.tvBookingListItemDestCity.text =
+                    this.originAndDestinationPair.destinationCity
+                bookingItemBinding.tvBookingListItemOrgCity.text =
+                    this.originAndDestinationPair.originCity
+                bookingItemBinding.tvBookingListItemDestName.text =
+                    this.originAndDestinationPair.destination.displayName
+                bookingItemBinding.tvBookingListItemOrgName.text =
+                    this.originAndDestinationPair.origin.displayName
+                bookingItemBinding.btnBookingListItemDestUrl.setOnClickListener {
+                    clickCallBack?.destClick(this.originAndDestinationPair.destination.url)
+                }
+                bookingItemBinding.btnBookingListItemOrgUrl.setOnClickListener {
+                    clickCallBack?.orgClick(this.originAndDestinationPair.origin.url)
+                }
+            }
+        }
+    }
 
-        val tvOrgCity: TextView = itemView.findViewById(R.id.tv_booking_list_item_orgCity)
-        val btnOrgUrl: TextView = itemView.findViewById(R.id.btn_booking_list_item_orgUrl)
-        val tvOrgName: TextView = itemView.findViewById(R.id.tv_booking_list_item_orgName)
+    fun removeItem(item: BookingItem, index: Int) {
+        bookingList.remove(item)
+        notifyItemRemoved(index)
+    }
+
+    fun getList(): ArrayList<BookingItem> {
+        return bookingList
+    }
+
+    fun updateList(newBookingList: ArrayList<BookingItem>) {
+        bookingList.clear()
+        bookingList.addAll(newBookingList)
+        notifyDataSetChanged()
     }
 }

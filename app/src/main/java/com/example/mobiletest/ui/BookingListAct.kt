@@ -10,61 +10,68 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobiletest.adapter.BookingListAdapter
 import com.example.mobiletest.adapter.BookingListClickCallBack
 import com.example.mobiletest.databinding.ActivityBookingListBinding
-import com.example.mobiletest.model.Booking
 import com.example.mobiletest.model.BookingItem
 import com.example.mobiletest.viewModel.BookingViewModel
-import retrofit2.http.Url
 
 class BookingListAct : AppCompatActivity() {
 
     private lateinit var bookingListAdapter: BookingListAdapter
     private lateinit var viewModel: BookingViewModel
-    private var bookingList = mutableListOf<BookingItem>()
-    private lateinit var booking: Booking
+    private var bookingList = ArrayList<BookingItem>()
     private lateinit var dataBinding: ActivityBookingListBinding
-
+    private var isRefresh = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = ActivityBookingListBinding.inflate(layoutInflater)
         setContentView(dataBinding.root)
-        viewModel = ViewModelProvider(this)[BookingViewModel::class.java]
-        viewModel.initCache(this)
-
+        init()
     }
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(this, "Refresh...", Toast.LENGTH_SHORT).show()
-        init()
+        if (isRefresh) {
+            Toast.makeText(this, "Refresh...", Toast.LENGTH_SHORT).show()
+            viewModel.getBookingList(this, true)
+            isRefresh = false
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isRefresh = true
     }
 
     private fun intentUrl(url: String) {
-       try{
-           val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-           startActivity(intent)
-       }catch(e : Exception){
-           e.printStackTrace()
-       }
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun init() {
-        viewModel.getBookingList(this)
+        viewModel = ViewModelProvider(this)[BookingViewModel::class.java]
+        viewModel.initCache(this)
+        bookingListAdapter = BookingListAdapter(bookingList)
+        dataBinding.recyclerViewBooking.layoutManager = LinearLayoutManager(this)
+        dataBinding.recyclerViewBooking.adapter = bookingListAdapter
+        bookingListAdapter.clickCallBack = object : BookingListClickCallBack {
+            override fun orgClick(url: String) {
+                intentUrl(url)
+            }
+
+            override fun destClick(url: String) {
+                intentUrl(url)
+            }
+        }
+        viewModel.getBookingList(this, isRefresh)
         viewModel.bookingList.observe(this) {
             if (it == null) {
                 Toast.makeText(this, "Loading Fail", Toast.LENGTH_LONG).show()
             } else {
-                bookingListAdapter = BookingListAdapter(it.segments)
-                bookingListAdapter.clickCallBack = object : BookingListClickCallBack {
-                    override fun orgClick(url: String) {
-                        intentUrl(url)
-                    }
-
-                    override fun destClick(url: String) {
-                        intentUrl(url)
-                    }
-                }
-                dataBinding.recyclerViewBooking.layoutManager = LinearLayoutManager(this)
-                dataBinding.recyclerViewBooking.adapter = bookingListAdapter
+                bookingListAdapter.updateList(it.segments)
+                bookingList = bookingListAdapter.getList()
             }
         }
     }

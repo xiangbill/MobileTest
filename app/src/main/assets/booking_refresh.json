@@ -1,0 +1,60 @@
+{
+  "shipReference": "ABCDEF",
+  "shipToken": "AAAABBBCCCCDDD",
+  "canIssueTicketChecking": false,
+  "expiryTime": "1722409261",
+  "duration": 2430,
+  "segments": [
+    {
+      "id": 1,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "BBB",
+          "displayName": "BBB DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "BBB City",
+        "origin": {
+          "code": "AAA",
+          "displayName": "AAA DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "AAA City"
+      }
+    },
+    {
+      "id": 2,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "CCC",
+          "displayName": "CCC DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "CCC City",
+        "origin": {
+          "code": "BBB",
+          "displayName": "BBB DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "BBB City"
+      }
+    },
+    {
+      "id": 3,
+      "originAndDestinationPair": {
+        "destination": {
+          "code": "DDD",
+          "displayName": "DDD DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "destinationCity": "DDD City",
+        "origin": {
+          "code": "EEE",
+          "displayName": "EEE DisplayName",
+          "url": "https://www.baidu.com/"
+        },
+        "originCity": "EEE City"
+      }
+    }
+  ]
+}
