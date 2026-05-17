@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobiletest.adapter.BookingListAdapter
 import com.example.mobiletest.adapter.BookingListClickCallBack
 import com.example.mobiletest.databinding.ActivityBookingListBinding
+import com.example.mobiletest.model.Booking
 import com.example.mobiletest.model.BookingItem
 import com.example.mobiletest.viewModel.BookingViewModel
 
@@ -72,7 +73,17 @@ class BookingListAct : AppCompatActivity() {
             } else {
                 bookingListAdapter.updateList(it.segments)
                 bookingList = bookingListAdapter.getList()
+                setViewValue(it)
             }
+        }
+    }
+
+    private fun setViewValue(booking: Booking) {
+        booking.let {
+            dataBinding.tvBookingListShipReference.text = it.shipReference
+            dataBinding.tvBookingListDuration.text = "${it.duration}"
+            dataBinding.tvBookingListExpiryTime.text = it.expiryTime
+            dataBinding.tvBookingListShipToken.text = it.shipToken
         }
     }
 }

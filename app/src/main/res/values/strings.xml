@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">mobileTest</string>
+    <string name="reserve_list">reserveList</string>
+    <string name="ship_reference">shipReference</string>
+    <string name="ship_token">shipToken</string>
+    <string name="expiry_time">expiryTime</string>
+    <string name="duration">duration</string>
 </resources>

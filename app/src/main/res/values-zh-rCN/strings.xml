@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">app测试</string>
+    <string name="reserve_list">预定列表</string>
+    <string name="ship_reference">票号</string>
+    <string name="ship_token">有效期</string>
+    <string name="expiry_time">过期时间</string>
+    <string name="duration">持续时间</string>
+</resources>
