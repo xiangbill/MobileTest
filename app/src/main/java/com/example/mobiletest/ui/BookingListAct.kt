@@ -13,6 +13,7 @@ import com.example.mobiletest.databinding.ActivityBookingListBinding
 import com.example.mobiletest.model.Booking
 import com.example.mobiletest.model.BookingItem
 import com.example.mobiletest.viewModel.BookingViewModel
+import androidx.core.net.toUri
 
 class BookingListAct : AppCompatActivity() {
 
@@ -44,7 +45,7 @@ class BookingListAct : AppCompatActivity() {
 
     private fun intentUrl(url: String) {
         try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
             startActivity(intent)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -52,6 +53,7 @@ class BookingListAct : AppCompatActivity() {
     }
 
     private fun init() {
+
         viewModel = ViewModelProvider(this)[BookingViewModel::class.java]
         viewModel.initCache(this)
         bookingListAdapter = BookingListAdapter(bookingList)
