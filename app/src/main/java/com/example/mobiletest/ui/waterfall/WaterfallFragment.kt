@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mobiletest.databinding.FragmentWaterfallBinding
 
-import androidx.recyclerview.widget.RecyclerView
 import com.example.mobiletest.adapter.WaterfallAdapter
 import com.google.android.material.chip.Chip
 import com.example.mobiletest.model.GenericItem
@@ -53,16 +53,28 @@ class WaterfallFragment : Fragment() {
     private fun setupWaterfallList() {
         val staggeredGridLayoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        // 1. 设置不自动调整间隙，配合 invalidateSpanAssignments 使用
         staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         binding.waterfallRecyclerView.layoutManager = staggeredGridLayoutManager
-        binding.waterfallRecyclerView.setItemAnimator(null); // 关闭动画，减少闪烁/空白
+        binding.waterfallRecyclerView.setItemAnimator(null) // 关闭动画，减少闪烁
+
+        // 2. 监听滚动状态，当滑动停止时重新修正布局，防止顶部出现大空白
+        binding.waterfallRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    staggeredGridLayoutManager.invalidateSpanAssignments()
+                }
+            }
+        })
 
         // Generate dummy data with varying aspect ratios for the waterfall effect
         val dummyData = List(30) { i ->
-            val width = 400
-            val height = Random.nextInt(300, 801) // Varying heights from 300 to 800
-            val imageUrl = "https://picsum.photos/$width/$height?random=$i"
-            GenericItem(i, "Item $i", "Description for item $i", imageUrl)
+            val w = 400
+            val h = Random.nextInt(400, 801) // 稍微大一点的随机高度范围
+            val imageUrl = "https://picsum.photos/$w/$h?random=$i"
+            // 3. 将图片宽高数据传入 Item
+            GenericItem(i, "Item $i", "Description for item $i", imageUrl, w, h)
         }
         binding.waterfallRecyclerView.adapter = WaterfallAdapter(dummyData)
     }

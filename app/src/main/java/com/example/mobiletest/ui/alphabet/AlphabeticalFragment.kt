@@ -1,5 +1,6 @@
 package com.example.mobiletest.ui.alphabet
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -50,6 +51,7 @@ class AlphabeticalFragment : Fragment() {
         binding.alphabetRecyclerView.adapter = adapter
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupAlphabetIndex() {
         alphabet.forEach { letter ->
             val textView = TextView(context).apply {
