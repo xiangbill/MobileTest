@@ -11,16 +11,19 @@ import com.google.android.material.tabs.TabLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.os.Handler
 import android.os.Looper
-import androidx.viewpager2.widget.ViewPager2
 import com.example.mobiletest.adapter.BannerAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.example.mobiletest.adapter.GenericAdapter
 import com.example.mobiletest.model.GenericItem
+import androidx.fragment.app.viewModels
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,18 +37,42 @@ class HomeFragment : Fragment() {
     private val bannerHandler = Handler(Looper.getMainLooper())
     private val bannerRunnable = object : Runnable {
         override fun run() {
-            val currentItem = binding.bannerViewPager.currentItem
-            val nextItem = if (currentItem == 2) 0 else currentItem + 1
-            binding.bannerViewPager.setCurrentItem(nextItem, true)
-            bannerHandler.postDelayed(this, 3000)
+            _binding?.let { b ->
+                val currentItem = b.bannerViewPager.currentItem
+                val nextItem = if (currentItem == 2) 0 else currentItem + 1
+                b.bannerViewPager.setCurrentItem(nextItem, true)
+                bannerHandler.postDelayed(this, 3000)
+            }
         }
     }
+
+    private var adapter: GenericAdapter? = null
+    private var isLoading = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupBanner()
         setupCategoryTabs()
+        setupRefreshLayout()
         setupRecyclerView()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.items.observe(viewLifecycleOwner) { items ->
+            adapter?.setData(items)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+            isLoading = loading
+            _binding?.swipeRefreshLayout?.isRefreshing = loading
+        }
+    }
+
+    private fun setupRefreshLayout() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshData(viewModel.currentCategory)
+        }
     }
 
     private fun setupBanner() {
@@ -87,15 +114,58 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        adapter = GenericAdapter(mutableListOf())
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(context)
-        refreshData("All")
+        binding.homeRecyclerView.adapter = adapter
+        
+        binding.homeRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                
+                if (!isLoading && totalItemCount <= (lastVisibleItem + 2)) {
+                    loadMoreData()
+                }
+            }
+        })
+        
+        // 关键改动：如果 ViewModel 里已经有数据了，就不要再触发 refreshData
+        if (viewModel.items.value.isNullOrEmpty()) {
+            refreshData("All")
+        }
     }
 
     private fun refreshData(category: String) {
-        val dummyData = List(10) { i ->
-            GenericItem(i, "$category Item $i", "Description for $category item $i")
-        }
-        binding.homeRecyclerView.adapter = GenericAdapter(dummyData)
+        viewModel.currentCategory = category
+        viewModel.currentPage = 1
+        viewModel.setLoading(true)
+        
+        // Simulate network delay
+        Handler(Looper.getMainLooper()).postDelayed({
+            val dummyData = List(10) { i ->
+                GenericItem(i, "$category Item $i", "Description for $category item $i")
+            }
+            viewModel.setItems(dummyData)
+            viewModel.setLoading(false)
+        }, 1500)
+    }
+
+    private fun loadMoreData() {
+        viewModel.setLoading(true)
+        viewModel.currentPage++
+        
+        // Simulate network delay
+        Handler(Looper.getMainLooper()).postDelayed({
+            val nextStart = (viewModel.currentPage - 1) * 10
+            val dummyData = List(10) { i ->
+                val index = nextStart + i
+                GenericItem(index, "${viewModel.currentCategory} Item $index", "Description for ${viewModel.currentCategory} item $index")
+            }
+            viewModel.addItems(dummyData)
+            viewModel.setLoading(false)
+        }, 1500)
     }
 
     override fun onDestroyView() {
