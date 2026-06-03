@@ -19,7 +19,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         if (savedInstanceState == null) {
             setupInitialFragment()
         } else {
-            restoreFragments()
+            // 在 super.onCreate 之后，BottomNavigationView 会自动恢复它的 selectedItemId
+            // 我们需要等待布局完成后或者直接在之后调用恢复逻辑
+            binding.root.post {
+                restoreFragments()
+            }
         }
     }
 
@@ -52,7 +56,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val alphabet = fm.findFragmentByTag("alphabet")
         val profile = fm.findFragmentByTag("profile")
 
-        val fragments = listOfNotNull(home, waterfall, alphabet, profile)
+        val fragments = mapOf(
+            "home" to home,
+            "waterfall" to waterfall,
+            "alphabet" to alphabet,
+            "profile" to profile
+        )
         
         val selectedId = binding.bottomNav.selectedItemId
         val targetTag = when (selectedId) {
@@ -64,12 +73,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
 
         val transaction = fm.beginTransaction()
-        for (f in fragments) {
-            if (f.tag == targetTag) {
-                transaction.show(f)
-                currentFragment = f
-            } else {
-                transaction.hide(f)
+        fragments.forEach { (tag, fragment) ->
+            if (fragment != null) {
+                if (tag == targetTag) {
+                    transaction.show(fragment)
+                    currentFragment = fragment
+                } else {
+                    transaction.hide(fragment)
+                }
             }
         }
         transaction.commit()

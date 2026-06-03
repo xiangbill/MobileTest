@@ -81,7 +81,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(FragmentCategoryB
             }
             adapter?.setData(dummyData)
             isLoading = false
-            binding.swipeRefreshLayout.isRefreshing = false
+            _binding?.swipeRefreshLayout?.isRefreshing = false
         }, 1000)
     }
 
