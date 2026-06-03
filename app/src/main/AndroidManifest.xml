@@ -26,6 +26,11 @@
             android:name=".ui.BookingListAct"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.detail.DetailActivity"
+            android:exported="false"
+            android:label="Item Detail" />
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 

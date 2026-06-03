@@ -28,4 +28,5 @@
         android:name="com.example.mobiletest.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
 </navigation>

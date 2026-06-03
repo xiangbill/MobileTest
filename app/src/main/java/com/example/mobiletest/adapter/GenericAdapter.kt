@@ -7,7 +7,7 @@ import com.example.mobiletest.base.BaseAdapter
 import com.example.mobiletest.databinding.ItemGenericBinding
 import com.example.mobiletest.model.GenericItem
 
-class GenericAdapter(items: MutableList<GenericItem>) :
+class GenericAdapter(items: MutableList<GenericItem>, private val onItemClick: (GenericItem) -> Unit) :
     BaseAdapter<GenericItem, ItemGenericBinding>(items) {
 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup): ItemGenericBinding {
@@ -20,5 +20,9 @@ class GenericAdapter(items: MutableList<GenericItem>) :
         Glide.with(binding.itemImage.context)
             .load(item.imageUrl)
             .into(binding.itemImage)
+        
+        binding.root.setOnClickListener {
+            onItemClick(item)
+        }
     }
 }

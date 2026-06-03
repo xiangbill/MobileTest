@@ -30,7 +30,9 @@ class AlphabeticalFragment : BaseFragment<FragmentAlphabeticalBinding>(FragmentA
                 items.add(GenericItem(items.size, "$char Item $i", "Alphabetical item starting with $char"))
             }
         }
-        adapter = GenericAdapter(items)
+        adapter = GenericAdapter(items) {
+            // Optional: Handle click in alphabet page too
+        }
         binding.alphabetRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.alphabetRecyclerView.adapter = adapter
     }

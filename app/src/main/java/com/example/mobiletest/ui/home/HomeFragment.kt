@@ -13,6 +13,9 @@ import com.example.mobiletest.model.GenericItem
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+import android.content.Intent
+import com.example.mobiletest.ui.detail.DetailActivity
+
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private val viewModel: HomeViewModel by viewModels()
@@ -100,7 +103,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun setupRecyclerView() {
-        adapter = GenericAdapter(mutableListOf())
+        adapter = GenericAdapter(mutableListOf()) { item ->
+            val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                putExtra("title", item.title)
+                putExtra("description", item.description)
+                putExtra("imageUrl", item.imageUrl)
+            }
+            startActivity(intent)
+        }
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.homeRecyclerView.adapter = adapter
         
