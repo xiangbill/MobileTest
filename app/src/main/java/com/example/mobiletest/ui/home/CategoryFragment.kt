@@ -16,10 +16,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(FragmentCategoryB
     private var adapter: GenericAdapter? = null
     private var category: String = "All"
     private var isLoading = false
-    
-    private val viewModel: CategoryViewModel by lazy {
-        androidx.lifecycle.ViewModelProvider(requireActivity())[CategoryViewModel::class.java]
-    }
+    private var currentPage = 1
 
     companion object {
         private const val ARG_CATEGORY = "arg_category"
@@ -49,13 +46,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(FragmentCategoryB
         }
         binding.categoryRecyclerView.adapter = adapter
         
-        // 观察数据变化
-        viewModel.getLiveData(category).observe(viewLifecycleOwner) { items ->
-            if (items.isNotEmpty()) {
-                adapter?.setData(items)
-            }
-        }
-        
         binding.categoryRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -75,14 +65,13 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(FragmentCategoryB
     }
 
     override fun initData() {
-        // 如果数据为空，才进行加载
-        if (viewModel.getLiveData(category).value.isNullOrEmpty()) {
-            refreshData()
-        }
+        // 由于使用了 show/hide 模式，只有第一次创建视图时会执行 initData
+        // 后续切换 Tab 不会触发 onViewCreated，因此不会重复刷新
+        refreshData()
     }
 
     private fun refreshData() {
-        viewModel.setPage(category, 1)
+        currentPage = 1
         isLoading = true
         binding.swipeRefreshLayout.isRefreshing = true
         
@@ -90,7 +79,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(FragmentCategoryB
             val dummyData = List(10) { i ->
                 GenericItem(i, "$category Item $i", "Description for $category item $i")
             }
-            viewModel.setData(category, dummyData)
+            adapter?.setData(dummyData)
             isLoading = false
             binding.swipeRefreshLayout.isRefreshing = false
         }, 1000)
@@ -98,16 +87,15 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(FragmentCategoryB
 
     private fun loadMoreData() {
         isLoading = true
-        val nextPage = viewModel.getPage(category) + 1
-        viewModel.setPage(category, nextPage)
+        currentPage++
         
         Handler(Looper.getMainLooper()).postDelayed({
-            val nextStart = (nextPage - 1) * 10
+            val nextStart = (currentPage - 1) * 10
             val dummyData = List(10) { i ->
                 val index = nextStart + i
                 GenericItem(index, "$category Item $index", "Description for $category item $index")
             }
-            viewModel.addData(category, dummyData)
+            adapter?.addData(dummyData)
             isLoading = false
         }, 1000)
     }
