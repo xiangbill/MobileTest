@@ -1,35 +1,17 @@
 package com.example.mobiletest.ui.waterfall
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.mobiletest.databinding.FragmentWaterfallBinding
-
 import com.example.mobiletest.adapter.WaterfallAdapter
-import com.google.android.material.chip.Chip
+import com.example.mobiletest.base.BaseFragment
+import com.example.mobiletest.databinding.FragmentWaterfallBinding
 import com.example.mobiletest.model.GenericItem
+import com.google.android.material.chip.Chip
 import kotlin.random.Random
 
-class WaterfallFragment : Fragment() {
+class WaterfallFragment : BaseFragment<FragmentWaterfallBinding>(FragmentWaterfallBinding::inflate) {
 
-    private var _binding: FragmentWaterfallBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentWaterfallBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initView() {
         setupLabels()
         setupWaterfallList()
     }
@@ -77,10 +59,5 @@ class WaterfallFragment : Fragment() {
             GenericItem(i, "Item $i", "Description for item $i", imageUrl, w, h)
         }
         binding.waterfallRecyclerView.adapter = WaterfallAdapter(dummyData)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

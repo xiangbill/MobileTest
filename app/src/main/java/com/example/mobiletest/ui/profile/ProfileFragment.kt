@@ -1,39 +1,25 @@
 package com.example.mobiletest.ui.profile
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.mobiletest.base.BaseFragment
 import com.example.mobiletest.databinding.FragmentProfileBinding
 import com.example.mobiletest.model.ApiResult
 import com.example.mobiletest.model.UserProfile
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
-class ProfileFragment : Fragment() {
-
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
     
     private val viewModel: ProfileViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun initView() {
+        setupListeners()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupListeners()
+    override fun initData() {
         observeFlows()
     }
 
@@ -47,7 +33,6 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 // 观察 UI 事件 (SharedFlow)
-                // SharedFlow 非常适合处理 Toast/SnackBar 等单次通知
                 launch {
                     viewModel.uiEvent.collect { message ->
                         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
@@ -89,10 +74,5 @@ class ProfileFragment : Fragment() {
         binding.profileEmail.text = user.email
         binding.securityStatusText.text = "Security Score: ${user.securityScore} (${user.level})"
         binding.securityStatusText.setTextColor(android.graphics.Color.parseColor("#388E3C")) // Holo Green Dark
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

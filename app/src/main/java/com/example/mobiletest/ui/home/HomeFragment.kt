@@ -1,61 +1,47 @@
 package com.example.mobiletest.ui.home
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.mobiletest.databinding.FragmentHomeBinding
-import com.google.android.material.tabs.TabLayout
-
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.os.Handler
 import android.os.Looper
-import com.example.mobiletest.adapter.BannerAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.tabs.TabLayoutMediator
-import com.example.mobiletest.adapter.GenericAdapter
-import com.example.mobiletest.model.GenericItem
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobiletest.adapter.BannerAdapter
+import com.example.mobiletest.adapter.GenericAdapter
+import com.example.mobiletest.base.BaseFragment
+import com.example.mobiletest.databinding.FragmentHomeBinding
+import com.example.mobiletest.model.GenericItem
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
-class HomeFragment : Fragment() {
-
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private val viewModel: HomeViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     private val bannerHandler = Handler(Looper.getMainLooper())
     private val bannerRunnable = object : Runnable {
         override fun run() {
-            _binding?.let { b ->
-                val currentItem = b.bannerViewPager.currentItem
-                val nextItem = if (currentItem == 2) 0 else currentItem + 1
-                b.bannerViewPager.setCurrentItem(nextItem, true)
-                bannerHandler.postDelayed(this, 3000)
-            }
+            val currentItem = binding.bannerViewPager.currentItem
+            val nextItem = if (currentItem == 2) 0 else currentItem + 1
+            binding.bannerViewPager.setCurrentItem(nextItem, true)
+            bannerHandler.postDelayed(this, 3000)
         }
     }
 
     private var adapter: GenericAdapter? = null
     private var isLoading = false
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initView() {
         setupBanner()
         setupCategoryTabs()
         setupRefreshLayout()
         setupRecyclerView()
+    }
+
+    override fun initData() {
         observeViewModel()
+        if (viewModel.items.value.isNullOrEmpty()) {
+            refreshData("All")
+        }
     }
 
     private fun observeViewModel() {
@@ -65,7 +51,7 @@ class HomeFragment : Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
             isLoading = loading
-            _binding?.swipeRefreshLayout?.isRefreshing = loading
+            binding.swipeRefreshLayout.isRefreshing = loading
         }
     }
 
@@ -130,11 +116,6 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-        
-        // 关键改动：如果 ViewModel 里已经有数据了，就不要再触发 refreshData
-        if (viewModel.items.value.isNullOrEmpty()) {
-            refreshData("All")
-        }
     }
 
     private fun refreshData(category: String) {
@@ -166,10 +147,5 @@ class HomeFragment : Fragment() {
             viewModel.addItems(dummyData)
             viewModel.setLoading(false)
         }, 1500)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -1,41 +1,25 @@
 package com.example.mobiletest.ui.alphabet
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.graphics.Color
 import android.graphics.Typeface
 import android.view.MotionEvent
+import android.view.View
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobiletest.adapter.GenericAdapter
+import com.example.mobiletest.base.BaseFragment
 import com.example.mobiletest.databinding.FragmentAlphabeticalBinding
 import com.example.mobiletest.model.GenericItem
 
-class AlphabeticalFragment : Fragment() {
-
-    private var _binding: FragmentAlphabeticalBinding? = null
-    private val binding get() = _binding!!
+class AlphabeticalFragment : BaseFragment<FragmentAlphabeticalBinding>(FragmentAlphabeticalBinding::inflate) {
 
     private val alphabet = ('A'..'Z').toList()
     private lateinit var adapter: GenericAdapter
     private val items = mutableListOf<GenericItem>()
     private var lastSelectedIndex = -1
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAlphabeticalBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initView() {
         setupList()
         setupAlphabetIndex()
     }
@@ -108,28 +92,11 @@ class AlphabeticalFragment : Fragment() {
         }
     }
 
-    private fun resetLetters() {
-        // This is now only used if we want to clear everything, 
-        // but normally we keep the last selection highlighted.
-        binding.selectedLetterOverlay.visibility = View.GONE
-        for (i in 0 until binding.indexBar.childCount) {
-            val child = binding.indexBar.getChildAt(i) as TextView
-            child.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start()
-            child.setTextColor(Color.BLACK)
-            child.setTypeface(null, Typeface.NORMAL)
-        }
-    }
-
     private fun scrollToSection(letter: Char) {
         val index = items.indexOfFirst { it.title.startsWith(letter) }
         if (index != -1) {
             (binding.alphabetRecyclerView.layoutManager as LinearLayoutManager)
                 .scrollToPositionWithOffset(index, 0)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

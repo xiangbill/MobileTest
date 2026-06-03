@@ -1,7 +1,7 @@
 package com.example.mobiletest.ui.profile
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobiletest.base.BaseViewModel
 import com.example.mobiletest.model.ApiResult
 import com.example.mobiletest.model.UserProfile
 import com.example.mobiletest.request.ProfileRepository
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel : BaseViewModel() {
 
     private val repository = ProfileRepository()
 
