@@ -11,9 +11,9 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+import com.example.mobiletest.manager.SpManager
 import com.example.mobiletest.R
 
 @SuppressLint("CustomSplashScreen")
@@ -66,7 +66,13 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        val intent = Intent(this, MainActivity::class.java)
+        val isFirstLaunch = SpManager.get("is_first_launch", true)
+        
+        val intent = if (isFirstLaunch) {
+            Intent(this, GuideActivity::class.java)
+        } else {
+            Intent(this, MainActivity::class.java)
+        }
         startActivity(intent)
         finish()
     }

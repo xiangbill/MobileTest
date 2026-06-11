@@ -31,6 +31,11 @@
             android:exported="true" />
 
         <activity
+            android:name=".ui.GuideActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MobileTest" />
+
+        <activity
             android:name=".ui.BookingListAct"
             android:exported="false" />
 
