@@ -1,6 +1,7 @@
 package com.example.mobiletest.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.mobiletest.R
 import com.example.mobiletest.base.BaseActivity
@@ -26,6 +27,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
         }
     }
+
+    fun isAnagram(str1 : String ,str2 : String) : Boolean{
+        val testStr1 = str1.replace("\\s".toRegex(), "").lowercase()
+        val testStr2 = str2.replace("\\s".toRegex(), "").lowercase()
+        if(testStr1.length != testStr2.length){
+            return false
+        }
+        val joinToString1 = testStr1.toCharArray().sorted().joinToString("")
+        val joinToString2 = testStr2.toCharArray().sorted().joinToString("")
+        return joinToString1 == joinToString2
+    }
+
 
     override fun initView() {
         binding.bottomNav.setOnItemSelectedListener { item ->
@@ -111,8 +124,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             // 4. 如果存在则显示
             transaction.show(target)
         }
-        
+
         currentFragment = target
         transaction.commit()
     }
+
+
 }
