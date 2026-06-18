@@ -14,6 +14,18 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected var _binding: VB? = null
     val binding get() = _binding!!
 
+    fun showLoading() {
+        if (isAdded && !isDetached) {
+            (activity as? BaseActivity<*>)?.showLoading()
+        }
+    }
+
+    fun hideLoading() {
+        if (isAdded && !isDetached) {
+            (activity as? BaseActivity<*>)?.hideLoading()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

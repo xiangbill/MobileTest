@@ -1,19 +1,43 @@
 package com.example.mobiletest.ui.waterfall
 
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.mobiletest.MobileApplication
 import com.example.mobiletest.adapter.WaterfallAdapter
 import com.example.mobiletest.base.BaseFragment
 import com.example.mobiletest.databinding.FragmentWaterfallBinding
 import com.example.mobiletest.model.GenericItem
+import com.example.mobiletest.viewModel.WaterfallViewModel
 import com.google.android.material.chip.Chip
 import kotlin.random.Random
 
-class WaterfallFragment : BaseFragment<FragmentWaterfallBinding>(FragmentWaterfallBinding::inflate) {
+class WaterfallFragment :
+    BaseFragment<FragmentWaterfallBinding>(FragmentWaterfallBinding::inflate) {
+
+    private val viewModel: WaterfallViewModel by viewModels()
 
     override fun initView() {
         setupLabels()
         setupWaterfallList()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.requestResult.observe(viewLifecycleOwner) { result ->
+//            MobileApplication.showToast("RxJava Success: Loaded ${result.title} details!")
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) showLoading() else hideLoading()
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                MobileApplication.showToast("RxJava Error: $it")
+                viewModel.setError(null)
+            }
+        }
     }
 
     private fun setupLabels() {
@@ -58,6 +82,8 @@ class WaterfallFragment : BaseFragment<FragmentWaterfallBinding>(FragmentWaterfa
             // 3. 将图片宽高数据传入 Item
             GenericItem(i, "Item $i", "Description for item $i", imageUrl, w, h)
         }
-        binding.waterfallRecyclerView.adapter = WaterfallAdapter(dummyData)
+        binding.waterfallRecyclerView.adapter = WaterfallAdapter(dummyData) { item ->
+            viewModel.loadItemDetails(item)
+        }
     }
 }

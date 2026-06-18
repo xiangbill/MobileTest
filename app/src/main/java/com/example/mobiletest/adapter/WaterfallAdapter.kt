@@ -8,8 +8,10 @@ import com.example.mobiletest.databinding.ItemWaterfallBinding
 import com.example.mobiletest.model.GenericItem
 import java.util.Random
 
-class WaterfallAdapter(items: List<GenericItem>) :
-    BaseAdapter<GenericItem, ItemWaterfallBinding>(items.toMutableList()) {
+class WaterfallAdapter(
+    items: List<GenericItem>,
+    private val onItemClick: (GenericItem) -> Unit = {}
+) : BaseAdapter<GenericItem, ItemWaterfallBinding>(items.toMutableList()) {
 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup): ItemWaterfallBinding {
         return ItemWaterfallBinding.inflate(inflater, parent, false)
@@ -17,6 +19,10 @@ class WaterfallAdapter(items: List<GenericItem>) :
 
     override fun bind(binding: ItemWaterfallBinding, item: GenericItem, position: Int) {
         binding.waterfallTitle.text = item.title
+
+        binding.root.setOnClickListener {
+            onItemClick(item)
+        }
 
         // --- 核心优化：预设 ImageView 高度 (兼容无宽高数据情况) ---
         val layoutParams = binding.waterfallImage.layoutParams
