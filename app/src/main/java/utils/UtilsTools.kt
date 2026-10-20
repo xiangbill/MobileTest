@@ -30,4 +30,13 @@ object UtilsTools {
             ""
         }
     }
+
+    inline fun runTask(tag : String ,block:()-> Unit){
+        block()
+        println("$tag task end")
+    }
+
+    inline fun <T> runTask(tag : String ,block:()-> T):T{
+        return block()
+    }
 }

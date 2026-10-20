@@ -22,15 +22,14 @@ class ProfileRepository {
     fun fetchUserProfile(): Flow<ApiResult<UserProfile>> = flow {
         // 1. 通知 UI 开始加载
         emit(ApiResult.Loading)
-        
         try {
             /**
              * 【已切换为真实请求】：
              * 调用 Retrofit 定义的 suspend 函数
              */
-            val response = apiService.getUserProfile() 
-            
+            val response = apiService.getUserProfile()
             // 将真实结果发给 UI
+            delay(1500)
             emit(ApiResult.Success(response)) 
 
         } catch (e: Exception) {
@@ -47,6 +46,20 @@ class ProfileRepository {
             */
         }
     }.flowOn(Dispatchers.IO) 
+
+    /**
+     * 使用 协程 + Flow 处理忘记密码请求
+     */
+    fun forgotPassword(email: String = "user@example.com"): Flow<ApiResult<String>> = flow {
+        emit(ApiResult.Loading)
+        try {
+            // 模拟发送重置密码请求耗时
+            delay(1500)
+            emit(ApiResult.Success("Password reset email sent to $email ✅"))
+        } catch (e: Exception) {
+            emit(ApiResult.Error("Reset password failed: ${e.localizedMessage}"))
+        }
+    }.flowOn(Dispatchers.IO)
 
     /**
      * 持续数据订阅流（保留原样）

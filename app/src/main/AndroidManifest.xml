@@ -44,6 +44,16 @@
             android:exported="false"
             android:label="Item Detail" />
 
+        <activity
+            android:name=".ui.profile.ForgotPasswordActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MobileTest" />
+
+        <activity
+            android:name=".ui.profile.ForgotPasswordOneWayActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MobileTest" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

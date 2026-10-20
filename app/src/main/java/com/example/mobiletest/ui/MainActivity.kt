@@ -1,7 +1,6 @@
 package com.example.mobiletest.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.mobiletest.R
 import com.example.mobiletest.base.BaseActivity
@@ -21,24 +20,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             setupInitialFragment()
         } else {
             // 在 super.onCreate 之后，BottomNavigationView 会自动恢复它的 selectedItemId
-            // 我们需要等待布局完成后或者直接在之后调用恢复逻辑
             binding.root.post {
                 restoreFragments()
             }
         }
     }
-
-    fun isAnagram(str1 : String ,str2 : String) : Boolean{
-        val testStr1 = str1.replace("\\s".toRegex(), "").lowercase()
-        val testStr2 = str2.replace("\\s".toRegex(), "").lowercase()
-        if(testStr1.length != testStr2.length){
-            return false
-        }
-        val joinToString1 = testStr1.toCharArray().sorted().joinToString("")
-        val joinToString2 = testStr2.toCharArray().sorted().joinToString("")
-        return joinToString1 == joinToString2
-    }
-
 
     override fun initView() {
         binding.bottomNav.setOnItemSelectedListener { item ->
@@ -73,7 +59,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             "home" to home,
             "waterfall" to waterfall,
             "alphabet" to alphabet,
-            "profile" to profile
+            "profile" to profile,
         )
         
         val selectedId = binding.bottomNav.selectedItemId
@@ -128,6 +114,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         currentFragment = target
         transaction.commit()
     }
-
-
 }

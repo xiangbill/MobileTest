@@ -14,7 +14,8 @@ import java.util.concurrent.TimeUnit
  * 简单的网络模块，提供 Retrofit 实例
  */
 object NetworkModule {
-    private const val BASE_URL = "https://api.example.com/" // 替换为你的真实服务器地址
+    // 接入开放免费测试 API 服务器 ReqRes (https://reqres.in/api/)
+    private const val BASE_URL = "https://reqres.in/api/"
 
     private val okHttpClient: OkHttpClient by lazy {
         // 创建日志拦截器
@@ -99,5 +100,9 @@ object NetworkModule {
 
     val waterfallService: WaterfallService by lazy {
         retrofit.create(WaterfallService::class.java)
+    }
+
+    val forgotPasswordService: ForgotPasswordService by lazy {
+        retrofit.create(ForgotPasswordService::class.java)
     }
 }

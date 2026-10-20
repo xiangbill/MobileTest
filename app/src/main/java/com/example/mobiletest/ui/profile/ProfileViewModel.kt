@@ -27,6 +27,10 @@ class ProfileViewModel : BaseViewModel() {
     private val _uiEvent = MutableSharedFlow<String>()
     val uiEvent: SharedFlow<String> = _uiEvent.asSharedFlow()
 
+    // 3. 使用 StateFlow 处理忘记密码请求状态
+    private val _forgotPasswordState = MutableStateFlow<ApiResult<String>?>(null)
+    val forgotPasswordState: StateFlow<ApiResult<String>?> = _forgotPasswordState.asStateFlow()
+
     init {
         refreshProfile()
     }
@@ -35,6 +39,28 @@ class ProfileViewModel : BaseViewModel() {
         viewModelScope.launch {
             repository.fetchUserProfile().collect { result ->
                 _userProfile.value = result
+            }
+        }
+    }
+
+    /**
+     * 使用 协程 + Flow 处理忘记密码逻辑
+     */
+    fun forgotPassword(email: String = "user@example.com") {
+        viewModelScope.launch {
+            repository.forgotPassword(email).collect { result ->
+                _forgotPasswordState.value = result
+                when (result) {
+                    is ApiResult.Loading -> {
+                        _uiEvent.emit("Sending password reset request...")
+                    }
+                    is ApiResult.Success -> {
+                        _uiEvent.emit(result.data)
+                    }
+                    is ApiResult.Error -> {
+                        _uiEvent.emit("Error: ${result.message}")
+                    }
+                }
             }
         }
     }

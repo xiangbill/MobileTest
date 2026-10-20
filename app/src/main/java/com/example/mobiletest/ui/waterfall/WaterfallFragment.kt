@@ -25,7 +25,7 @@ class WaterfallFragment :
 
     private fun observeViewModel() {
         viewModel.requestResult.observe(viewLifecycleOwner) { result ->
-//            MobileApplication.showToast("RxJava Success: Loaded ${result.title} details!")
+            MobileApplication.showToast("RxJava Success: Loaded ${result.title} details!")
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->

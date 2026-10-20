@@ -3,9 +3,11 @@ package com.example.mobiletest.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -32,6 +34,17 @@ open class BaseViewModel : ViewModel() {
             // 切换到主线程更新错误 LiveData (防止在非主线程抛出异常)
             _errorMessage.postValue(displayMessage)
         }
+    }
+
+    /**
+     * 封装通用的网络请求流调度（线程切换、Loading、统一错误处理）
+     */
+    fun <T : Any> Observable<T>.composeRequest(): Observable<T> {
+        return this.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .applyCommonErrorHandling()
+            .doOnSubscribe { setLoading(true) }
+            .doFinally { setLoading(false) }
     }
 
     fun addDisposable(disposable: Disposable) {

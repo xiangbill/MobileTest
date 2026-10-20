@@ -103,6 +103,28 @@
                 android:text="Points: --"
                 android:textSize="16sp" />
 
+            <Button
+                android:id="@+id/btn_forgot_password_twoway"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Forgot Password (Two-Way)" />
+
+            <Button
+                android:id="@+id/btn_forgot_password_oneway"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Forgot Password (One-Way)"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            <Button
+                android:id="@+id/btn_forgot_password_flow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Forgot Password (Coroutines + Flow)" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

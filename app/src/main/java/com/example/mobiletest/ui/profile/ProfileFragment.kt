@@ -1,5 +1,6 @@
 package com.example.mobiletest.ui.profile
 
+import android.content.Intent
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +27,18 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private fun setupListeners() {
         binding.profileImage.setOnClickListener {
             viewModel.updateAvatar()
+        }
+
+        binding.btnForgotPasswordTwoway.setOnClickListener {
+            startActivity(Intent(requireContext(), ForgotPasswordActivity::class.java))
+        }
+
+        binding.btnForgotPasswordOneway.setOnClickListener {
+            startActivity(Intent(requireContext(), ForgotPasswordOneWayActivity::class.java))
+        }
+
+        binding.btnForgotPasswordFlow.setOnClickListener {
+            viewModel.forgotPassword()
         }
     }
 
@@ -54,6 +67,22 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                                 binding.securityStatusText.text = "Error: ${result.message}"
                                 binding.securityStatusText.setTextColor(android.graphics.Color.RED)
                                 Snackbar.make(binding.root, result.message, Snackbar.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                }
+
+                // 观察忘记密码请求流 (StateFlow)
+                launch {
+                    viewModel.forgotPasswordState.collect { result ->
+                        when (result) {
+                            is ApiResult.Loading -> {
+                                binding.btnForgotPasswordFlow.isEnabled = false
+                                binding.btnForgotPasswordFlow.text = "Processing..."
+                            }
+                            else -> {
+                                binding.btnForgotPasswordFlow.isEnabled = true
+                                binding.btnForgotPasswordFlow.text = "Forgot Password (Coroutines + Flow)"
                             }
                         }
                     }

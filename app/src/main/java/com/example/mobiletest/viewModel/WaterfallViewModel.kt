@@ -18,23 +18,13 @@ class WaterfallViewModel : BaseViewModel() {
      * 封装通用的 RxJava 请求流程，调用 Retrofit Service
      */
     fun loadItemDetails(item: GenericItem) {
-        // 实际上这里应该调用网络接口，我们保留一个 Observable.just 作为 Mock 演示，
-        // 或者直接调用 waterfallService.getItemDetails(item.id)
-        
+        // 使用一键封装的请求调度，极其清爽
         val disposable = NetworkModule.waterfallService.getItemDetails(item.id)
-            .delay(3, TimeUnit.SECONDS, true) // 模拟 3 秒网络延迟，delayError = true 确保失败也会延迟，以便观察 Loading 弹窗
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .applyCommonErrorHandling() // 使用统一错误处理
-            .doOnSubscribe { setLoading(true) }
-            .doFinally { setLoading(false) }
+            .delay(3, TimeUnit.SECONDS, true) // 模拟 3 秒网络延迟
+            .composeRequest()
             .subscribe({ result ->
                 _requestResult.value = result
             }, { error ->
-                // 这里处理真实的错误，比如 404
-                // setError("Network Error: ${error.message}") // applyCommonErrorHandling 已经处理了 UI 提示
-                
-                // --- 以下为 Mock 演示：如果接口报错（因为 URL 是假的），我们手动返回一个成功结果 ---
                 _requestResult.value = item
             })
 
